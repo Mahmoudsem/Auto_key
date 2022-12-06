@@ -1,0 +1,77 @@
+// A C# program to illustrate
+// Autokey Cipher Technique
+using System;
+using System.Text.RegularExpressions;
+
+public class AutoKey
+{
+
+  private static String alphabet
+    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  public static void Main(string[] args)
+  {
+    String msg = "HELLO WOELD";
+    String key = "NT";
+
+    // This if statement is all about C# regular
+    // expression
+    // [] for range
+    // // Extra \ is used to escape one \
+    // \\d acts as delimiter
+    // ? once or not at all
+    // . Any character (may or may not match line
+    // terminators)
+    Regex w = new Regex("[-+]?d*.?d+");
+    if (w.IsMatch(key))
+      key = "" + alphabet[Int32.Parse(key) % 26];
+    string enc = autoEncryption(msg, key);
+
+    Console.WriteLine("Plaintext : " + msg);
+    Console.WriteLine("Encrypted : " + enc);
+    Console.WriteLine("Decrypted : "
+            + autoDecryption(enc, key));
+  }
+
+  public static string autoEncryption(string msg,
+                    string key)
+  {
+    int len = msg.Length;
+
+    // generating the keystream
+    string newKey = key + msg;
+    newKey = newKey.Substring(0, newKey.Length
+                - key.Length);
+    string encryptMsg = "";
+
+    // applying encryption algorithm
+    for (int x = 0; x < len; x++)
+    {
+      int first = alphabet.IndexOf(msg[x]);
+      int second = alphabet.IndexOf(newKey[x]);
+      int total = (first + second) % 26;
+      encryptMsg += alphabet[total];
+    }
+    return encryptMsg;
+  }
+
+  public static string autoDecryption(string msg,
+                    string key)
+  {
+    string currentKey = key;
+    string decryptMsg = "";
+
+    // applying 
+    for (int x = 0; x < msg.Length; x++)
+    {
+      int get1 = alphabet.IndexOf(msg[x]);
+      int get2 = alphabet.IndexOf(currentKey[x]);
+      int total = (get1 - get2) % 26;
+      total = (total < 0) ? total + 26 : total;
+      decryptMsg += alphabet[total];
+      currentKey += alphabet[total];
+    }
+    return decryptMsg;
+  }
+}
+
